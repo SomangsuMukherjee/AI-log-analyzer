@@ -7,6 +7,16 @@ A cloud-hosted DevOps/security-focused Python platform for detecting suspicious 
 API Documentation (Swagger UI):  
 https://ai-log-analyzer-jzl9.onrender.com/docs
 
+## Screenshots
+
+### API Documentation
+
+![Swagger Demo](swagger-demo.png)
+
+### Incident Detection Example
+
+![Incident Response](incident-response.png)
+
 ## GitHub Repository
 
 https://github.com/SomangsuMukherjee/AI-log-analyzer
