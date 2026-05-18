@@ -1,106 +1,174 @@
-# AI Log Analyzer Platform
+# AI-Powered Log Monitoring Platform
 
-A DevOps and security-focused Python project that detects suspicious authentication events from server logs and produces AI-assisted incident summaries. The project is containerized with Docker Compose and includes Prometheus/Grafana monitoring plus a GitHub Actions CI pipeline.
+A cloud-hosted DevOps/security-focused Python platform for detecting suspicious authentication events, classifying incidents, and exposing monitoring-ready APIs.
 
-## Tech Stack
+## Live Demo
 
-- Python
-- FastAPI
-- Docker / Docker Compose
-- Prometheus
-- Grafana
-- GitHub Actions
-- Optional Ollama + Mistral for local AI summaries
+API Documentation (Swagger UI):  
+https://ai-log-analyzer-jzl9.onrender.com/docs
+
+## GitHub Repository
+
+https://github.com/SomangsuMukherjee/AI-log-analyzer
+
+---
+
+## Overview
+
+This project simulates a lightweight security monitoring and incident analysis platform.
+
+It ingests authentication-style log data, detects suspicious activity patterns such as repeated failed logins, classifies security incidents, and returns structured recommendations through a public REST API.
+
+The project was built to demonstrate practical DevOps, backend engineering, cloud deployment, and automation skills relevant to real-world infrastructure and security engineering roles.
+
+---
 
 ## Features
 
-- Upload or paste authentication logs
-- Detect possible brute-force attacks
-- Detect successful login after repeated failures
-- Classify incidents by severity
-- Generate AI-assisted summaries using local Ollama when available
-- Expose Prometheus metrics
-- Simple web dashboard
-- CI pipeline for backend validation and Docker image build
+- Detects suspicious authentication patterns
+- Identifies repeated failed login attempts
+- Flags potential brute-force activity
+- Classifies incidents by severity
+- Returns structured JSON incident reports
+- Public HTTPS deployment
+- REST API with interactive Swagger documentation
+- Health monitoring endpoint
+- Metrics endpoint for Prometheus integration
+- Dockerized deployment
+
+---
+
+## Tech Stack
+
+### Backend
+- Python
+- FastAPI
+- Uvicorn
+
+### DevOps / Infrastructure
+- Docker
+- Docker Compose
+- Render (cloud deployment)
+- Prometheus-compatible metrics
+
+### Version Control
+- Git
+- GitHub
+
+---
+
+## API Endpoints
+
+### Health Check
+```http
+GET /health
+```
+
+Checks service availability.
+
+---
+
+### Analyze Log Content
+```http
+POST /analyze-text
+```
+
+Analyzes raw authentication log content.
+
+Example request:
+
+```json
+{
+  "content": "Failed login from 192.168.1.44\nFailed login from 192.168.1.44\nFailed login from 192.168.1.44\nSuccessful login from unknown location"
+}
+```
+
+Example response:
+
+```json
+{
+  "incident_count": 1,
+  "incidents": [
+    {
+      "type": "Possible brute-force authentication attempt",
+      "ip_address": "192.168.1.44",
+      "severity": "Low",
+      "event_count": 3,
+      "recommendation": "Investigate the source IP, check affected accounts, and consider blocking repeated authentication attempts."
+    }
+  ]
+}
+```
+
+---
+
+### Upload Log File
+```http
+POST /upload-log
+```
+
+Accepts uploaded log files for analysis.
+
+---
+
+### Incident Retrieval
+```http
+GET /incidents
+```
+
+Returns detected incidents.
+
+---
+
+### Metrics
+```http
+GET /metrics
+```
+
+Prometheus-compatible monitoring endpoint.
+
+---
 
 ## Architecture
 
 ```text
-User / Log File
-      ↓
-Frontend Dashboard
-      ↓
+User / API Client
+        |
+        v
 FastAPI Backend
-      ↓
-Python Log Analyzer
-      ↓
-Optional Ollama/Mistral AI Summary
-      ↓
-Prometheus Metrics
-      ↓
-Grafana Monitoring
+        |
+        v
+Log Parser
+        |
+        v
+Incident Detection Engine
+        |
+        v
+Severity Classification
+        |
+        v
+REST API Response
+        |
+        +------> Prometheus Metrics
 ```
 
-## Run Locally
+---
 
-```bash
-docker compose up --build
-```
 
-Then open:
+## Future Improvements
 
-- Frontend: http://localhost:8080
-- API Docs: http://localhost:8000/docs
-- Health Check: http://localhost:8000/health
-- Prometheus: http://localhost:9090
-- Grafana: http://localhost:3000
+- AI-generated incident summaries using LLMs
+- IP reputation checking
+- Timestamp correlation
+- Suspicious geolocation detection
+- PostgreSQL incident persistence
+- CI/CD pipeline with GitHub Actions
+- Authentication / API keys
 
-Default Grafana login:
+---
 
-```text
-username: admin
-password: admin
-```
+## Author
 
-## Test API
-
-```bash
-curl -X POST http://localhost:8000/analyze-text \
-  -H "Content-Type: application/json" \
-  -d '{"content":"Failed login from 192.168.1.44\nFailed login from 192.168.1.44\nFailed login from 192.168.1.44", "use_ai": false}'
-```
-
-## Optional AI Setup with Ollama
-
-Install Ollama and pull Mistral:
-
-```bash
-ollama pull mistral
-ollama run mistral
-```
-
-Then tick "Use AI summary" in the frontend or send `use_ai: true` to the API.
-
-## Prometheus Metrics
-
-The backend exposes metrics at:
-
-```text
-http://localhost:8000/metrics
-```
-
-Example metrics:
-
-- `app_requests_total`
-- `log_processing_seconds`
-- `incidents_detected_total`
-
-## CV Description
-
-**AI-Powered Log Monitoring Platform**
-
-- Built a containerized Python/FastAPI platform for analyzing authentication logs and detecting suspicious login behavior.
-- Implemented rule-based detection for brute-force attempts and successful login after repeated failures.
-- Integrated optional local LLM incident summarization using Ollama and Mistral.
-- Added Prometheus metrics and Grafana monitoring for API and incident visibility.
-- Implemented GitHub Actions CI pipeline for backend validation and Docker image builds.
+Somangsu Mukherjee  
+Junior DevOps / Cloud Engineer  
+Košice, Slovakia
